@@ -49,12 +49,17 @@ class LTIAuthenticator < ::Auth::Authenticator
     # methods here rather than reaching into details of how these fields are stored in the DB.
     # This appears related to changes in https://github.com/discourse/discourse/pull/4977
     #
-    # Making the assumption that Edx uses username as primary and cannot be changed
+    # Making the assumption that Edx uses username as primary and cannot be changed so first mean of authentication
     # See https://support.edx.org/hc/en-us/articles/115016004448-Can-I-change-my-edX-username-
-    user = User.find_by_username(auth_result.username)
-    if user.present?
+    user_by_username = User.find_by_username(auth_result.username)
+    user_by_email = User.find_by_email(auth_result.email.downcase)
+    if user_by_username.present?
       log :info, "after_authenticate, found user records by username, using existing user..."
-    elsif user.nil?
+      user = user_by_username
+    elsif user_by_email.present?
+      log :info, "after_authenticate, found user records by email, using existing user..."
+      user = user_by_email
+    else
       log :info, "after_authenticate, no matches found username, creating user record for first-time user..."
       user = User.new(email: auth_result.email.downcase, username: auth_result.username)
       user.staged = false
