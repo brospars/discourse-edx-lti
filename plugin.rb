@@ -10,7 +10,7 @@
 # Plugins need to explicitly include their dependencies, and the loading
 # mechanism is different than with bundler.
 # See https://github.com/discourse/discourse/blob/master/lib/plugin_gem.rb
-gem 'ims-lti', '1.1.13', require: false, require_name: 'ims/lti'
+gem 'ims-lti', '1.2.9', require: false, require_name: 'ims/lti'
 
 
 # Enable site settings in admin UI.
